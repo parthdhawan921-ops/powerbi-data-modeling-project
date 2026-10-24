@@ -1,0 +1,20 @@
+// DAX measures in the _measures table
+
+total_sales =
+    sum(fact_sales[line_total])
+
+total_orders =
+    DISTINCTCOUNT(fact_sales[order_id])
+
+total_active_customer =
+    DISTINCTCOUNT(fact_sales[customer_id])
+
+base_total_customer =
+    COUNT(dim_customer[customer_id])
+
+// Calculated table and columns
+
+dim_date = CALENDARAUTO()
+dim_date[year] = year(dim_date[date])
+dim_date[month] = MONTH(dim_date[date])
+dim_date[day] = DAY(dim_date[date])

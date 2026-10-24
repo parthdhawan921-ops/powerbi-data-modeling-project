@@ -1,0 +1,25 @@
+let
+    Source = order_line_items,
+    #"Merged Queries" = Table.NestedJoin(Source, {"OrderID"}, orders, {"OrderID"}, "orders", JoinKind.LeftOuter),
+    #"Expanded orders" = Table.ExpandTableColumn(#"Merged Queries", "orders", {"CustomerName", "CustomerCity", "RegionName", "ShipToCity", "BillToCity", "OrderDate", "OrderChannel", "Status", "Priority", "OrderTotal"}, {"CustomerName", "CustomerCity", "RegionName", "ShipToCity", "BillToCity", "OrderDate", "OrderChannel", "Status", "Priority", "OrderTotal"}),
+    #"Merged Queries1" = Table.NestedJoin(#"Expanded orders", {"CustomerName"}, dim_customer, {"customer_name"}, "dim_customer", JoinKind.LeftOuter),
+    #"Expanded dim_customer" = Table.ExpandTableColumn(#"Merged Queries1", "dim_customer", {"customer_id"}, {"customer_id"}),
+    #"Merged Queries2" = Table.NestedJoin(#"Expanded dim_customer", {"ProductName"}, dim_product, {"product_name"}, "dim_product", JoinKind.LeftOuter),
+    #"Expanded dim_product" = Table.ExpandTableColumn(#"Merged Queries2", "dim_product", {"product_key"}, {"product_key"}),
+    #"Reordered Columns" = Table.ReorderColumns(#"Expanded dim_product",{"LineID", "OrderID", "customer_id", "product_key", "ProductName", "Quantity", "UnitPrice", "UnitCost", "DiscountPct", "LineTotal", "CustomerName", "CustomerCity", "RegionName", "ShipToCity", "BillToCity", "OrderDate", "OrderChannel", "Status", "Priority", "OrderTotal"}),
+    #"Merged Queries3" = Table.NestedJoin(#"Reordered Columns", {"OrderChannel", "Status", "Priority"}, dim_order_flag, {"channel_code", "status", "priority"}, "dim_order_flag", JoinKind.LeftOuter),
+    #"Expanded dim_order_flag" = Table.ExpandTableColumn(#"Merged Queries3", "dim_order_flag", {"flag_key"}, {"dim_order_flag.flag_key"}),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Expanded dim_order_flag",{"LineID", "OrderID", "customer_id", "dim_order_flag.flag_key", "product_key", "ProductName", "Quantity", "UnitPrice", "UnitCost", "DiscountPct", "LineTotal", "CustomerName", "CustomerCity", "RegionName", "ShipToCity", "BillToCity", "OrderDate", "OrderChannel", "Status", "Priority", "OrderTotal"}),
+    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns1",{{"dim_order_flag.flag_key", "flag_key"}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Renamed Columns",{"ProductName", "CustomerName", "CustomerCity", "RegionName", "OrderChannel", "Status", "Priority", "OrderTotal"}),
+    #"Reordered Columns2" = Table.ReorderColumns(#"Removed Columns",{"LineID", "OrderID", "customer_id", "flag_key", "product_key", "ShipToCity", "BillToCity", "OrderDate", "Quantity", "UnitPrice", "UnitCost", "DiscountPct", "LineTotal"}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Reordered Columns2",{{"LineTotal", "line_total"}, {"DiscountPct", "discount_pct"}, {"UnitCost", "unit_cost"}, {"UnitPrice", "unit_price"}, {"Quantity", "quantity"}, {"OrderDate", "order-date"}, {"OrderID", "order_id"}, {"LineID", "line_id"}}),
+    #"Merged Queries4" = Table.NestedJoin(#"Renamed Columns1", {"ShipToCity"}, dim_geo, {"city"}, "dim_geo", JoinKind.LeftOuter),
+    #"Expanded dim_geo" = Table.ExpandTableColumn(#"Merged Queries4", "dim_geo", {"geo_key"}, {"dim_geo.geo_key"}),
+    #"Merged Queries5" = Table.NestedJoin(#"Expanded dim_geo", {"BillToCity"}, dim_geo, {"city"}, "dim_geo", JoinKind.LeftOuter),
+    #"Expanded dim_geo1" = Table.ExpandTableColumn(#"Merged Queries5", "dim_geo", {"geo_key"}, {"dim_geo.geo_key.1"}),
+    #"Renamed Columns2" = Table.RenameColumns(#"Expanded dim_geo1",{{"dim_geo.geo_key", "ship_to_city_key"}, {"dim_geo.geo_key.1", "bill_to_city_key"}}),
+    #"Reordered Columns3" = Table.ReorderColumns(#"Renamed Columns2",{"line_id", "order_id", "customer_id", "flag_key", "product_key", "ship_to_city_key", "bill_to_city_key", "ShipToCity", "BillToCity", "order-date", "quantity", "unit_price", "unit_cost", "discount_pct", "line_total"}),
+    #"Removed Columns1" = Table.RemoveColumns(#"Reordered Columns3",{"ShipToCity", "BillToCity"})
+in
+    #"Removed Columns1"
