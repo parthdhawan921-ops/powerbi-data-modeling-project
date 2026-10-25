@@ -7,6 +7,10 @@
 
 A Power BI project that turns a messy, real-world-style data model into a clean **star schema** that reports can trust. The raw model had **20 tables**: duplicated order tables split by year, a stray `Sheet1` copy, columns named `Column1`, test records, comma-separated lists in a single cell, and relationships pointing in every direction. The clean model has **13 tables (6 facts, 6 dimensions, 1 security table)** and a dedicated measures table.
 
+- **What I did:** Rebuilt a tangled 20-table Power BI model into a clean, simple layout (a star schema) that reports can trust.
+- **What I found:** **Test records and 5 overlapping customer tables were inflating counts**, and 13 of 80 orders had extra rows that would overstate orders.
+- **Why it matters:** 20 tables became 13 with one customer table, so every report counts each customer and order once.
+
 **[📥 Download the .pbix](Data_Modelling_Project.pbix)** · **[📄 Before / after PDF](docs/DataModel_BeforeAfter.pdf)** · **[Interactive case file](https://parthdhawan921-ops.github.io/Parth_Personal/#pbimodel)** · Built following [Data with Baraa's "Power BI Data Modeling Portfolio Project (Nightmare Data Model)"](https://youtu.be/0A2k62YEbfI)
 
 ---
