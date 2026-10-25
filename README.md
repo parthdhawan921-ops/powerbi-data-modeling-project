@@ -7,7 +7,7 @@
 
 A Power BI project that turns a messy, real-world-style data model into a clean **star schema** that reports can trust. The raw model had **20 tables**: duplicated order tables split by year, a stray `Sheet1` copy, columns named `Column1`, test records, comma-separated lists in a single cell, and relationships pointing in every direction. The clean model has **13 tables (6 facts, 6 dimensions, 1 security table)** and a dedicated measures table.
 
-**[📥 Download the .pbix](Data_Modelling_Project.pbix)** · **[📄 Before / after PDF](docs/DataModel_BeforeAfter.pdf)** · Built following [Data with Baraa's "Power BI Data Modeling Portfolio Project (Nightmare Data Model)"](https://youtu.be/0A2k62YEbfI)
+**[📥 Download the .pbix](Data_Modelling_Project.pbix)** · **[📄 Before / after PDF](docs/DataModel_BeforeAfter.pdf)** · **[Interactive case file](https://parthdhawan921-ops.github.io/Parth_Personal/#pbimodel)** · Built following [Data with Baraa's "Power BI Data Modeling Portfolio Project (Nightmare Data Model)"](https://youtu.be/0A2k62YEbfI)
 
 ---
 
